@@ -50,6 +50,7 @@ func (this Server) AuthorizeHandler(w http.ResponseWriter, r *http.Request) {
 	responseType := r.URL.Query().Get("response_type")
 	clientID := r.URL.Query().Get("client_id")
 	redirectURI := r.URL.Query().Get("redirect_uri")
+	state := r.URL.Query().Get("response_type")
 
 	if responseType != "code" {
 		http.Error(w, "response_type must be 'code'", http.StatusBadRequest)
@@ -62,7 +63,7 @@ func (this Server) AuthorizeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, fmt.Sprintf("/login?next=/api/mcp?redirect_uri=%s", redirectURI), http.StatusSeeOther)
+	http.Redirect(w, r, fmt.Sprintf("/login?next=/api/mcp?redirect_uri=%s&state=%s", redirectURI, state), http.StatusSeeOther)
 }
 
 func (this Server) TokenHandler(w http.ResponseWriter, r *http.Request) {
